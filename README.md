@@ -7,13 +7,13 @@ Scheduling is done with Apache Airflow: https://airflow.apache.org/
 
 For forecasts Prophet is used, an Open Source software by Facebook: https://facebook.github.io/prophet/
 
-#About ACONA
+## About ACONA
 
 ACONA stands for Augmented Content Analytics - an open source tool that automatically analyzes and simplifies data, for example from server logs or existing (open source) analytics tools, and proposes concrete measures for optimizing content.
 
 More in the general documentation: https://app.gitbook.com/@acolono/s/acona/
 
-#How to use
+## How to use
 Build the docker image
 ```
 docker build . -f Dockerfile --tag acona-airflow:0.0.1
