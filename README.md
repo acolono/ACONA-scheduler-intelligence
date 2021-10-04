@@ -1,4 +1,4 @@
-#ACONA Scheduler and Intelligence Suite
+## ACONA Scheduler and Intelligence Suite
 
 This component is responsible to write data into the ACONA Data Warehouse. It schedules jobs and provides functionality 
 to calculate scores, recommendations, forecasts and alerts.
