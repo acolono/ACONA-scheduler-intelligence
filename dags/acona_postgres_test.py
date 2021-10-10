@@ -1,5 +1,7 @@
 import datetime
 
+from airflow.utils.dates import days_ago
+
 from airflow import DAG
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 

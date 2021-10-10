@@ -21,3 +21,4 @@ RUN pip install --no-cache-dir --user pandas
 RUN pip install --no-cache-dir --user pystan==2.19.1.1 prophet
 RUN pip install --no-cache-dir --user matplotlib
 RUN pip install --no-cache-dir --user numpy
+RUN pip install --no-cache-dir --user fsspec

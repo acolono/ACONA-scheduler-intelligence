@@ -27,7 +27,7 @@ default_args = {
 default_args=default_args,
 start_date=days_ago(2),
 tags=['matomo', 'gsc'],
-schedule_interval="@daily")
+schedule_interval='30 2 * * *')
 
 def acona_success_metrics_etl():
 
@@ -174,5 +174,3 @@ def acona_success_metrics_etl():
 # [START dag_invocation]
 acona_success_metrics_etl = acona_success_metrics_etl()
 # [END dag_invocation]
-
-# [END tutorial]

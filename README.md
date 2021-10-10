@@ -34,6 +34,9 @@ and
 - MATOMO_URL and MATOMO_TOKEN for every configured domain like this:
 When your Domain ID is 1 name the variables MATOMO_URL_1 and MATOMO_TOKEN_1
 
+You also need to configure an airflow postgres connection to your ACONA Data Warehouse,
+named "acona_data_warehouse".
+
 ## ACONA Data Warehouse
 To set up your own ACONA Data Warehouse, see https://github.com/acolono/ACONA-data-warehouse 
 
