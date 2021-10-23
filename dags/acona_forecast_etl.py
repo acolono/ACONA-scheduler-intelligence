@@ -5,6 +5,7 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import Variable
 from datetime import datetime, timedelta
+from acona_pgres_tools import acona_truncate_table, acona_data_write
 # [END import_module]
 
 
@@ -42,7 +43,6 @@ def acona_forecast_etl():
         import pandas as pd
         import numpy as np
         from prophet import Prophet
-        from sqlalchemy import create_engine
 
         WAREHOUSE_TOKEN = Variable.get("WAREHOUSE_TOKEN")
         WAREHOUSE_URL = Variable.get("WAREHOUSE_URL")
@@ -73,7 +73,7 @@ def acona_forecast_etl():
               # Log transform
               df['y'] = np.log(1 + df['y'])
               # Change mode to additive because of log data and use a rather low uncertainty interval.
-              m = Prophet(seasonality_mode='additive', interval_width=0.5)
+              m = Prophet(seasonality_mode='additive', interval_width=0.9)
               m.fit(df)
               future = m.make_future_dataframe(periods=7)
               future['floor'] = 0
@@ -89,14 +89,18 @@ def acona_forecast_etl():
               forecasted_lower = forecasted_lower.append(forecasted[['url', 'ds', 'yhat_lower']], ignore_index=True)
               forecasted_upper = forecasted_upper.append(forecasted[['url', 'ds', 'yhat_upper']], ignore_index=True)
 
-              ## use data to query directly in postgress: we need a table for each table (_f_lower, _f_upper)
-              warehouse = PostgresHook(postgres_conn_id='acona_data_warehouse')
-              warehouse_uri = warehouse.get_uri()
-              engine = create_engine(warehouse_uri)
-              # We only need future values, so can also remove old data before.
-              forecasted_lower.to_sql(metric + '_f_lower', engine, if_exists='replace')
-              forecasted_upper.to_sql(metric + '_f_upper', engine, if_exists='replace')
-
+        ## Use data to query directly in postgress: we need a table for each table (_f_lower, _f_upper)
+        ## Truncate table before because we don't need old forecast values
+        #f_lower
+        forecasted_lower.rename(columns={'ds': 'date', 'yhat_lower': 'value'}, inplace=True)
+        lower_table = 'api.' + metric + '_f_lower'
+        acona_truncate_table(lower_table)
+        acona_data_write(lower_table, forecasted_lower)
+        #f_upper
+        forecasted_upper.rename(columns={'ds': 'date', 'yhat_upper': 'value'}, inplace=True)
+        upper_table = 'api.' + metric + '_f_upper'
+        acona_truncate_table(upper_table)
+        acona_data_write(upper_table, forecasted_upper)
     # [END forecast]
 
     # [START main_flow]
@@ -115,9 +119,9 @@ def acona_forecast_etl():
       'metric_d_bounce_rate'
     }
 
-    metrics = {
-      'metric_d_page_views'
-    }
+    #metrics = {
+      #'metric_d_page_views'
+    #}
 
     # Loop over metrics, forecast values and save in data warehouse
     for metric in metrics:

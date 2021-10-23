@@ -14,7 +14,7 @@ with DAG(
 ) as dag:
 
     get_success_scores = PostgresOperator(
-        task_id="get_success_score", postgres_conn_id="acona_data_warehouse", sql="SELECT * FROM api.acona_success_scores limit 10;"
+        task_id="get_success_score", postgres_conn_id="acona_data_warehouse", sql="SELECT * FROM api.metric_success_score_ratio limit 10;"
     )
 
     get_success_scores
