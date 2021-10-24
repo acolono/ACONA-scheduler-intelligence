@@ -5,7 +5,7 @@ from airflow.providers.postgres.operators.postgres import PostgresOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from airflow.models import Variable
 from datetime import datetime, timedelta
-from acona_pgres_tools import acona_truncate_table, acona_data_write
+from acona_postgres_tools import acona_truncate_table, acona_data_write
 # [END import_module]
 
 
@@ -25,7 +25,7 @@ start_date=days_ago(2),
 tags=['prophet'],
 schedule_interval='0 5 * * 0')
 
-def acona_forecast_etl():
+def acona_forecast():
 
     # [END instantiate_dag]
 
@@ -130,5 +130,5 @@ def acona_forecast_etl():
     # [END main_flow]
 
 # [START dag_invocation]
-acona_forecast_etl = acona_forecast_etl()
+acona_forecast = acona_forecast()
 # [END dag_invocation]
