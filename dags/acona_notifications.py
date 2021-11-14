@@ -72,11 +72,13 @@ def acona_notifications():
                 # Load forecasted upper value.
                 sql = "select value from api." + metric + "_f_upper where date = '{}' and url = '{}'".format(date, url)
                 upper_values = acona_fetch_one(sql)
+                upper_value = None
                 if upper_values:
                     upper_value = upper_values[0]
                 # Load forecasted lower value.
                 sql = "select value from api." + metric + "_f_lower where date = '{}' and url = '{}'".format(date, url)
                 lower_values = acona_fetch_one(sql)
+                lower_value = None
                 if lower_values:
                     lower_value = lower_values[0]
                 # Compare values.
@@ -101,6 +103,11 @@ def acona_notifications():
                     data = {'notification_id': [notification_id], 'langcode': ['en'], 'title': [title_en], 'text': [text_en]}
                     dataf = pd.DataFrame(data)
                     acona_data_write('api.notification_texts', dataf)
+
+                # write calc dates
+                data = {'variable': 'api.notifications', 'date': date, 'url': url}
+                dataf = pd.DataFrame(data)
+                acona_data_write('internal.var_calc_dates', dataf)
     # [END notify]
 
     # [START main_flow]
