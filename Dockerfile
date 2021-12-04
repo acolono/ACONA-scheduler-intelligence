@@ -23,3 +23,6 @@ RUN pip install --no-cache-dir --user matplotlib
 RUN pip install --no-cache-dir --user numpy
 RUN pip install --no-cache-dir --user fsspec
 RUN pip install --no-cache-dir --user json-logic
+RUN pip install --no-cache-dir --user beautifulsoup4
+RUN pip install --no-cache-dir --user lxml
+RUN pip install --no-cache-dir --user html5lib
